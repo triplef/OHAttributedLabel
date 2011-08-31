@@ -270,6 +270,10 @@ BOOL CTRunContainsCharactersFromStringRange(CTRunRef run, NSRange range) {
 	static const CGFloat kVMargin = 5.f;
 	if (!CGRectContainsPoint(CGRectInset(drawingRect, 0, -kVMargin), point)) return nil;
 	
+    // special case: one custom link covering the entire text is always returned
+    if ([customLinks count] == 1 && NSEqualRanges([[customLinks lastObject] range], NSMakeRange(0, [_attributedText length])))
+    	return [customLinks lastObject];
+    
 	CFArrayRef lines = CTFrameGetLines(textFrame);
 	if (!lines) return nil;
 	CFIndex nbLines = CFArrayGetCount(lines);
